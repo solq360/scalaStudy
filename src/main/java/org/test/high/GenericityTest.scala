@@ -6,6 +6,7 @@ import java.lang.Double
 import org.scalatest.FunSuite
 import scala.collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
+import scala.collection.immutable.Stack
 
 /**
  * *
@@ -49,6 +50,13 @@ class GenericityTest extends FunSuite {
     other.mkArray("xx", "ere") |: Println
     other.mkArray(2, "x") |: Println
 
+    
+    
+    var obj1 = new CoVariant(new ClassA);
+    var obj2 = new CoVariant(new SuperClass);
+    var obj3: CoVariant[SuperClass] = obj1;
+    //var obj4: CoVariant[ClassA] = obj2; error
+    
   }
 }
 
@@ -87,12 +95,39 @@ class OtherGenericity {
 
 }
 
-//abstract class Box[+A]{ def foo(): A }
-//abstract class Box[-A]{ def foo(a: A) }
-abstract class IBox[+A] { def foo[B >: A](b: B) }
-//abstract class Box[-A]{ def foo[B <: A](): B}
+/**
+ * ***********************************************************************
+ *	所谓 协变跟逆变 只是解决 泛型 T 声明报错，跟 上下界配合解决
+ * 
+ * 协变(co-variant)和逆变(contra-variant)
+ * ***********************************************************************
+ * 
+ * 
+ *
+ * +B是B的超集，叫协变 Covariant
+ * 		示例:
+ * 				ClassA extends ClassB
+ * 				Covariant[ClassA] 是 Covariant[ClassB] 的子类
+ * -A是A的子集，叫逆变 
+ *		示例:
+ * 				ClassA extends ClassB
+ * 				ContraVariant[ClassB] 是 ContraVariant[ClassA] 的子类
+ */
+
+
+private class CoVariant[+A](t:A)
+private class ContraVariant[-A](t:A)
+
+private class SuperClass;
+private class ClassA extends SuperClass;
+
+private abstract class Consumer[-S,+T](){
+  def m1[U >: T](u: U)//协变，下界
+  def m2[U <: S](s: S)//逆变，上界
+}
 
 ///////////////多重定义//////////////////
+
 
 /* 
     // 表示：A和B为T上界 
