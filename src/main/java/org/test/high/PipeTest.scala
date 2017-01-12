@@ -1,4 +1,9 @@
 package org.test.high
+
+import org.test.middle.TestObject2
+import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.Buffer
+
 /**
  * *
  * pipe学习
@@ -26,5 +31,26 @@ object Json {
 }
 
 object Println {
-  def |:(obj: Any) = println(obj)
+  def |:(obj: Any) = {
+
+    if (obj.isInstanceOf[Array[_]]) {
+      val ar = obj.asInstanceOf[Array[_]];
+      print("[")
+      for (v <- ar) {
+        print(v + " , ")
+      }
+      print("]\n")
+    } else if (obj.isInstanceOf[Buffer[_]]) {
+      val ar = obj.asInstanceOf[Buffer[_]];
+      print("[")
+
+      for (v <- ar) {
+        print(v + " , ")
+      }
+      print("]\n")
+
+    } else {
+      println(obj)
+    }
+  }
 }

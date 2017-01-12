@@ -5,6 +5,9 @@ import scala.beans.BeanProperty
 /**
  * <p>var 属性权限可读写 </p>
  * <p>val 属性权限可读不能写 相当于 java final</p>
+ * <p>lazy 相当于java double check </p>
+ * <p>def 每次重新计算 相当于 java fun </p>
+ * <p>scala 是种计算值语言 左边的值 = 右边的表达式 一些关键词声明只不过添加相应的操作权限 </p>
  * <p>小结 : case class 比较适合做上下文临时对象</p>
  * @author solq
  */
@@ -13,7 +16,7 @@ case class QuerySpark(
   /** sql dsl */
   @BeanProperty val sql: String,
 
-  /** connect options */
+   /** connect options */
   val options: Map[String, String],
 
   /** option tmp table */
@@ -31,9 +34,3 @@ sealed abstract class PlayerLog(id: Long, account:String, roleName :String,name:
 
 case class PlayerRegisterLog(time:Long,id: Long, account:String, roleName :String,name: String) extends 
 PlayerLog(id: Long, account:String, roleName :String,name: String);
-
-
-//abstract class Box[+A]{ def foo(): A }
-//abstract class Box[-A]{ def foo(a: A) }
-//abstract class Box[+A]{ def foo[B >: A](b: B) }
-//abstract class Box[-A]{ def foo[B <: A](): B}

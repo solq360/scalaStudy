@@ -4,6 +4,7 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import org.scalatest.Matchers
 import org.scalatest.WordSpec
+import org.scalatest.FunSuite
 
 /**
  * *
@@ -11,9 +12,9 @@ import org.scalatest.WordSpec
  * @author solq
  * *
  */
-class CallBackTest extends WordSpec with Matchers {
+class CallBackTest2 extends FunSuite {
 
-  "test1" in {
+   test("test1") {
     val o = new CallBackObject;
     o.draw("a") {
       str =>
@@ -21,16 +22,16 @@ class CallBackTest extends WordSpec with Matchers {
     }
   }
 
-  "test2" in {
+  test("test2") {
     val o = new CallBackObject;
-    o.lock { () =>
-      println("cb");
+    o.lock {  
+       println("cb");
     }
   }
 
-  "test3" in {
+ test("test3") {
     val o = new CallBackObject;
-    o.request({ () =>
+    o.request({ 
       println("ok");
       throw new RuntimeException();
     }, { e =>
@@ -45,19 +46,19 @@ class CallBackObject {
   def draw(offset: String)(cb: String => Unit) =
     cb(s"draw(offset = $offset), ${this.toString}")
 
-  def lock(cb: () => Unit) {
+  def lock(cb: => Unit) {
     lock.lock();
     try {
       println("before");
-      cb();
+      (()=> cb)();
     } finally {
       lock.unlock();
     }
   }
 
-  def request(cb: () => Unit, errorCb: Exception => Unit) {
+  def request(cb: => Unit, errorCb: Exception => Unit) {
     try {
-       cb();
+      (()=> cb)();
     } catch {
       case t: Exception => errorCb(t);
     }
